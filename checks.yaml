@@ -1,0 +1,9 @@
+# Lista monitorowanych serwisów.
+# Dodanie nowego = jeden wpis tutaj, resztą zajmuje się GitHub Actions.
+services:
+  - name: Strona mcjkrok.github.io
+    url: https://mcjkrok.github.io
+  - name: GitHub API
+    url: https://api.github.com
+  - name: AI Platform Starter (repo)
+    url: https://github.com/mcjkrok/ai-platform-starter
