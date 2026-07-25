@@ -161,6 +161,12 @@
    "status": 200,
    "latency_ms": 53,
    "checked_at": "2026-07-25T01:01:39+00:00"
+  },
+  {
+   "ok": true,
+   "status": 200,
+   "latency_ms": 131,
+   "checked_at": "2026-07-25T04:42:24+00:00"
   }
  ],
  "GitHub API": [
@@ -325,6 +331,12 @@
    "status": 200,
    "latency_ms": 13,
    "checked_at": "2026-07-25T01:01:39+00:00"
+  },
+  {
+   "ok": true,
+   "status": 200,
+   "latency_ms": 84,
+   "checked_at": "2026-07-25T04:42:24+00:00"
   }
  ],
  "AI Platform Starter (repo)": [
@@ -489,6 +501,12 @@
    "status": 200,
    "latency_ms": 519,
    "checked_at": "2026-07-25T01:01:40+00:00"
+  },
+  {
+   "ok": true,
+   "status": 200,
+   "latency_ms": 534,
+   "checked_at": "2026-07-25T04:42:24+00:00"
   }
  ]
 }
