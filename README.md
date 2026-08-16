@@ -1,80 +1,80 @@
 # 📡 status-watch
 
-Bezserwerowy monitor dostępności stron i API — działa w całości na **GitHub Actions**
-(cron co 30 minut), a wyniki publikuje jako statyczną stronę statusową na
-**GitHub Pages**. Zero infrastruktury, zero kosztów, pełna historia w gicie.
+Serverless uptime monitor for websites and APIs — runs entirely on **GitHub Actions**
+(cron every 30 minutes) and publishes the results as a static status page on
+**GitHub Pages**. No infrastructure, no cost, full history kept in git.
 
-**Strona statusowa:** https://mcjkrok.github.io/status-watch
+**Live status page:** https://mcjkrok.github.io/status-watch
 
-## Jak to działa
+## How it works
 
 ```mermaid
 flowchart LR
-    CRON[GitHub Actions<br/>cron co 30 min] --> M[monitor.py]
-    M -->|HTTP GET| S1[monitorowane serwisy]
-    M --> H[data/history.json<br/>historia w repo]
-    M --> P[docs/index.html<br/>strona statusowa]
+    CRON[GitHub Actions<br/>cron every 30 min] --> M[monitor.py]
+    M -->|HTTP GET| S1[monitored services]
+    M --> H[data/history.json<br/>history in repo]
+    M --> P[docs/index.html<br/>status page]
     H & P -->|git commit + push| REPO[(repo)]
     REPO --> PAGES[GitHub Pages]
 ```
 
-1. Workflow `monitor` odpala się co 30 minut (albo ręcznie z zakładki Actions).
-2. `monitor.py` czyta listę serwisów z `checks.yaml` i robi HTTP GET do każdego.
-3. Wyniki (status, czas odpowiedzi) dopisuje do `data/history.json` — historia
-   sprawdzeń jest wersjonowana w gicie, więc niczego nie trzeba hostować.
-4. Z historii liczy uptime za 24 h i 7 dni i generuje `docs/index.html`.
-5. Workflow commituje zmiany z powrotem do repo; GitHub Pages serwuje stronę.
-6. Gdy któryś serwis nie odpowiada, run w Actions robi się **czerwony** —
-   GitHub sam wysyła wtedy powiadomienie e-mail o nieudanym workflow.
+1. The `monitor` workflow fires every 30 minutes (or manually from the Actions tab).
+2. `monitor.py` reads the service list from `checks.yaml` and sends an HTTP GET to each.
+3. Results (status, response time) are appended to `data/history.json` — the check
+   history is versioned in git, so nothing needs to be hosted anywhere.
+4. From that history it computes 24 h and 7 d uptime and renders `docs/index.html`.
+5. The workflow commits the changes back to the repo; GitHub Pages serves the page.
+6. When a service is down the Actions run turns **red** — GitHub then sends a
+   failed-workflow email on its own.
 
-## Dodanie serwisu do monitorowania
+## Adding a service to monitor
 
-Jeden wpis w `checks.yaml`:
+One entry in `checks.yaml`:
 
 ```yaml
 services:
-  - name: Moje API
+  - name: My API
     url: https://api.example.com/healthz
 ```
 
-## Uruchomienie lokalne
+## Running locally
 
 ```bash
 git clone https://github.com/mcjkrok/status-watch.git
 cd status-watch
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
-pytest -v          # testy (httpx.MockTransport — bez prawdziwych requestów)
-python monitor.py  # jednorazowe sprawdzenie + wygenerowanie docs/index.html
+pytest -v          # tests (httpx.MockTransport — no real requests)
+python monitor.py  # single check + regenerate docs/index.html
 ```
 
-## Struktura
+## Layout
 
 ```
 status-watch/
-├── monitor.py                  # cała logika: checki, historia, render strony
-├── checks.yaml                 # konfiguracja monitorowanych serwisów
-├── data/history.json           # historia sprawdzeń (commitowana przez bota)
-├── docs/index.html             # wygenerowana strona statusowa (GitHub Pages)
-├── tests/test_monitor.py       # testy pytest
+├── monitor.py                  # all logic: checks, history, page rendering
+├── checks.yaml                 # monitored services configuration
+├── data/history.json           # check history (committed by the bot)
+├── docs/index.html             # generated status page (GitHub Pages)
+├── tests/test_monitor.py       # pytest suite
 └── .github/workflows/
-    ├── monitor.yml             # cron co 30 min: check → commit → Pages
-    └── ci.yml                  # lint (ruff) + testy przy każdym pushu/PR
+    ├── monitor.yml             # cron every 30 min: check → commit → Pages
+    └── ci.yml                  # lint (ruff) + tests on every push/PR
 ```
 
-## Decyzje techniczne
+## Design decisions
 
-- **GitHub Actions jako "serwer"** — cron w Actions zastępuje osobną maszynę;
-  to samo podejście co w popularnym projekcie Upptime.
-- **Historia w gicie zamiast bazy danych** — dla checków co 30 min JSON w repo
-  w zupełności wystarcza, a za darmo dostajemy backup i pełny audyt zmian.
-- **`concurrency` w workflow** — dwa runy naraz zrobiłyby konflikt przy pushu,
-  więc kolejne czekają w kolejce.
-- **`[skip ci]` w commitach bota** — commit z danymi nie powinien odpalać CI.
-- **Exit code 1 przy awarii** — czerwony run w Actions to darmowy alerting
-  (e-mail od GitHuba), bez konfigurowania czegokolwiek.
-- **Testy bez sieci** — `httpx.MockTransport` symuluje odpowiedzi 200/503
-  i błędy połączenia, więc testy są szybkie i deterministyczne.
+- **GitHub Actions as the "server"** — an Actions cron replaces a dedicated machine;
+  the same approach the popular Upptime project takes.
+- **History in git instead of a database** — for checks every 30 minutes a JSON file
+  in the repo is plenty, and it gives backups and a full audit trail for free.
+- **`concurrency` in the workflow** — two simultaneous runs would collide on push,
+  so later ones queue up.
+- **`[skip ci]` in bot commits** — a data commit should not trigger CI.
+- **Exit code 1 on failure** — a red Actions run is free alerting (email from
+  GitHub) with nothing to configure.
+- **Network-free tests** — `httpx.MockTransport` simulates 200/503 responses and
+  connection errors, keeping the suite fast and deterministic.
 
 ## Stack
 
