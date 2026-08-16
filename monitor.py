@@ -96,8 +96,8 @@ def render_page(history: dict, results: list[dict]) -> str:
         entries = history.get(result["name"], [])
         day = uptime_percent(entries, 24)
         week = uptime_percent(entries, 24 * 7)
-        badge = "🟢 OK" if result["ok"] else "🔴 AWARIA"
-        status = result["status"] if result["status"] is not None else "brak odpowiedzi"
+        badge = "🟢 OK" if result["ok"] else "🔴 DOWN"
+        status = result["status"] if result["status"] is not None else "no response"
         rows.append(
             f"<tr><td>{badge}</td><td><a href=\"{result['url']}\">"
             f"{result['name']}</a></td><td>{status}</td>"
@@ -107,9 +107,9 @@ def render_page(history: dict, results: list[dict]) -> str:
         )
 
     all_ok = all(result["ok"] for result in results)
-    headline = "Wszystkie systemy działają" if all_ok else "Wykryto problemy"
+    headline = "All systems operational" if all_ok else "Problems detected"
     return f"""<!doctype html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -132,13 +132,13 @@ def render_page(history: dict, results: list[dict]) -> str:
 <h1>📡 status-watch</h1>
 <p class="headline">{headline}</p>
 <table>
-<tr><th>Status</th><th>Serwis</th><th>Kod HTTP</th><th>Czas odpowiedzi</th>
-<th>Uptime 24h</th><th>Uptime 7 dni</th></tr>
+<tr><th>Status</th><th>Service</th><th>HTTP code</th><th>Response time</th>
+<th>Uptime 24h</th><th>Uptime 7d</th></tr>
 {"".join(rows)}
 </table>
-<footer>Ostatnie sprawdzenie: {generated} ·
-sprawdzane co 30 minut przez GitHub Actions ·
-<a href="https://github.com/mcjkrok/status-watch">kod źródłowy</a></footer>
+<footer>Last checked: {generated} ·
+checked every 30 minutes by GitHub Actions ·
+<a href="https://github.com/mcjkrok/status-watch">source code</a></footer>
 </body>
 </html>
 """

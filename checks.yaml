@@ -1,7 +1,7 @@
-# Lista monitorowanych serwisów.
-# Dodanie nowego = jeden wpis tutaj, resztą zajmuje się GitHub Actions.
+# Monitored services.
+# Adding a new one = a single entry here; GitHub Actions handles the rest.
 services:
-  - name: Strona mcjkrok.github.io
+  - name: Portfolio site
     url: https://mcjkrok.github.io
   - name: GitHub API
     url: https://api.github.com

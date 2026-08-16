@@ -73,5 +73,5 @@ def test_render_page_contains_services_and_status() -> None:
     ]
     page = monitor.render_page({"svc": []}, results)
     assert "svc" in page
-    assert "Wykryto problemy" in page
+    assert "Problems detected" in page
     assert "500" in page
