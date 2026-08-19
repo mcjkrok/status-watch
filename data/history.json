@@ -2933,6 +2933,12 @@
    "status": 200,
    "latency_ms": 20,
    "checked_at": "2026-08-19T05:28:29+00:00"
+  },
+  {
+   "ok": true,
+   "status": 200,
+   "latency_ms": 34,
+   "checked_at": "2026-08-19T05:58:01+00:00"
   }
  ],
  "AI Platform Starter (repo)": [
@@ -5869,6 +5875,12 @@
    "status": 200,
    "latency_ms": 524,
    "checked_at": "2026-08-19T05:28:30+00:00"
+  },
+  {
+   "ok": true,
+   "status": 200,
+   "latency_ms": 442,
+   "checked_at": "2026-08-19T05:58:02+00:00"
   }
  ],
  "Portfolio site": [
@@ -8805,6 +8817,12 @@
    "status": 200,
    "latency_ms": 155,
    "checked_at": "2026-08-19T05:28:29+00:00"
+  },
+  {
+   "ok": true,
+   "status": 200,
+   "latency_ms": 166,
+   "checked_at": "2026-08-19T05:58:01+00:00"
   }
  ]
 }
