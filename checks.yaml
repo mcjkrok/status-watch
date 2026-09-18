@@ -1,0 +1,9 @@
+# Monitored services.
+# Adding a new one = a single entry here; GitHub Actions handles the rest.
+services:
+  - name: Portfolio site
+    url: https://mcjkrok.github.io
+  - name: GitHub API
+    url: https://api.github.com
+  - name: AI Platform Starter (repo)
+    url: https://github.com/mcjkrok/ai-platform-starter
